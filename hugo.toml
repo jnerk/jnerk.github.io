@@ -1,6 +1,6 @@
-baseURL = 'https://example.org/'
+baseURL = 'https://jnerk.github.io/'
 languageCode = 'en-us'
-title = 'My New Hugo Site'
+title = 'Jnerk'
 theme= 'archie'
 
 [caches]
