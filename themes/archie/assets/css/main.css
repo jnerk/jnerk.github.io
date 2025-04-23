@@ -1,5 +1,5 @@
 /* Markdown */
-:root{
+:root {
 --maincolor: red;
 --bordercl:rebeccapurple;
 --callouctcolor:dodgerblue;
@@ -43,14 +43,39 @@ blockquote {
   padding-left: 1em;
 }
 
-a {
+/* a {
   border-bottom: 3px solid var(--maincolor);
   color: inherit;
   text-decoration: none;
 }
+
 a:hover {
     background-color: var(--hovercolor);
     color: #fff;
+} */
+
+a {
+	text-decoration: none;
+	color: #18272F;
+	font-weight: 700;
+  position: relative;
+}
+
+a::before {
+  content: '';
+  background-color: #3cffd0;
+  position: absolute;
+  left: 2px;
+  bottom: 0px;
+  width: 100%;
+  height: 8px;
+  z-index: -1;
+  /* transition: all .3s ease-in-out; */
+}
+
+a:hover::before {
+  bottom: 0;
+  height: 100%;
 }
 
 ul {
