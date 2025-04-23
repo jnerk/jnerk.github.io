@@ -1,4 +1,4 @@
-baseURL = 'https://jnerk.github.io/'
+baseURL = 'https://jnerk.github.io'
 languageCode = 'en-us'
 title = 'Jnerk'
 theme= 'archie'
