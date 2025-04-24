@@ -1,4 +1,5 @@
 # Archie - Hugo theme
+
 Archie is a minimal and clean theme for hugo with a markdown-ish UI.
 
 Forked from [Ezhil Theme](https://github.com/vividvilla/ezhil)
@@ -9,24 +10,29 @@ Forked from [Ezhil Theme](https://github.com/vividvilla/ezhil)
 
 ![](/images/theme.png)
 ![](/images/archie-dark.png)
+
 ## Feature
-- Google Analytics Script
-- Callouts
-- Tags
-- Auto Dark Mode(based on system theme)
-- Dark/Light Mode toggle
-- tl:dr; frontamatter
-- Table of contents
-- Cache busting for CSS files
-- Disqus Comments
+
+-   Google Analytics Script
+-   Callouts
+-   Tags
+-   Auto Dark Mode(based on system theme)
+-   Dark/Light Mode toggle
+-   tl:dr; frontamatter
+-   Table of contents
+-   Cache busting for CSS files
+-   Disqus Comments
 
 ## Installation
+
 In your Hugo website directory, create a new folder named theme and clone the repo
+
 ```bash
 $ mkdir themes
 $ cd themes
 $ git clone https://github.com/athul/archie.git
 ```
+
 Edit the `config.toml` file with `theme="archie"`
 For more information read the official [setup guide](https://gohugo.io/installation/) of Hugo.
 
@@ -34,7 +40,9 @@ If you encounter any issues with Google Analytics, update Hugo to v0.125.0 or
 later and make sure your using the latest version of the theme.
 
 ## Writing Posts
-Create a new `.md` file in the *content/posts* folder
+
+Create a new `.md` file in the _content/posts_ folder
+
 ```yml
 ---
 title: Title of the post
@@ -48,14 +56,16 @@ toc: true/false (optional)
 ```
 
 ## Credits
+
 Forked from [Ezhil Theme](https://github.com/vividvilla/ezhil) and Licensed under MIT License
 Inspired by design of blog.jse.li
 
-----
+---
 
 ## Config Options
 
 ### Custom CSS
+
 Custom CSS files can be included though the `customcss` config parameter.
 
 Note: CSS files should be placed under the `assets` directory e.g. `assets/css/first.css`.
@@ -67,20 +77,20 @@ Note: CSS files should be placed under the `assets` directory e.g. `assets/css/f
 
 ### Callouts
 
-There are five different types of callout, including this themes original callout and a custom one as well. These callouts are compatible with both light and dark theme modes. 
+There are five different types of callout, including this themes original callout and a custom one as well. These callouts are compatible with both light and dark theme modes.
 
 ![Screenshot from 2025-01-04 19-22-43](https://github.com/user-attachments/assets/bcaf7c3c-2339-449f-8bcb-8a2906d7ddcf)
-
 
 #### Original
 
 This steup is to ensure backwards compatibility for previous callouts.
 
-```markdown                                                                                                                                                                                                    
+```markdown
 {{< callout emoji="⚡️" text="Original callout." >}}
 ```
 
 #### Alert
+
 ```markdown
 {{< callout type="alert" text="This is an alert callout." >}}
 ```
@@ -168,6 +178,7 @@ name = "Tags"
 url = "/tags"
 weight = 4
 ```
+
 ---
 
 If you liked my work please consider supporting me on [BuymeACoffee](https://www.buymeacoffee.com/athulca)
