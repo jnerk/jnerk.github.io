@@ -356,6 +356,11 @@ pre code {
     margin-top: 40px;
 }
 
+.footer .nav {
+    font-family: "Helvetica Neue", HelveticaNeue, Helvetica, Helvetica, Arial,
+        sans-serif;
+}
+
 .page-title {
     margin-bottom: 0;
 }
