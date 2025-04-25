@@ -239,6 +239,8 @@ h6::before {
     top: 20px;
 }
 
+/* */
+
 /* Footer */
 footer {
     display: flex;
@@ -270,13 +272,12 @@ footer {
 }
 
 h1 {
-    margin-block-end: 0;
+    margin-block-end: 0 !important;
 }
 
 time {
     color: grey;
-    font-family: "Helvetica Neue", HelveticaNeue, Helvetica, Helvetica, Arial,
-        sans-serif;
+    font-family: "Helvetica Neue", HelveticaNeue, Helvetica, Arial, sans-serif;
     font-size: 12px;
 }
 
