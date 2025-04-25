@@ -63,19 +63,21 @@ a {
 
 a::before {
     content: "";
-    background-color: #3cffd0;
+    background-color: #ccc;
     position: absolute;
     left: 2px;
     bottom: 0px;
     width: 100%;
-    height: 8px;
+    height: 1px;
     z-index: -1;
     /* transition: all .3s ease-in-out; */
 }
 
 a:hover::before {
     bottom: 0;
-    height: 100%;
+    /* height: 100%; */
+    height: 8px;
+    background-color: #3cffd0;
 }
 
 ul {
@@ -242,8 +244,8 @@ footer {
     display: flex;
     align-items: center;
     border-top: 0.4rem dotted var(--bordercl);
-    padding: 2rem 0rem;
-    margin-top: 2rem;
+    padding: 1rem 0rem 2rem 0rem;
+    margin-top: 1rem;
 }
 .soc {
     display: flex;
@@ -265,6 +267,10 @@ footer {
 /* Common */
 .title h1 {
     margin-bottom: 0;
+}
+
+h1 {
+    margin-block-end: 0;
 }
 
 time {
