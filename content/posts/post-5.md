@@ -1,6 +1,7 @@
 ---
 title: "Typography"
 date: 2018-03-18T12:13:38+05:30
+draft: true
 ---
 
 Lid est laborum et dolorum fuga. Et harum quidem rerum facilis est et expeditasi distinctio. Nam libero tempore, cum soluta nobis est eligendi optio cumque nihilse impedit quo minus id quod amets untra dolor amet sad. Sed ut perspser iciatis unde omnis iste natus error sit voluptatem accusantium doloremque laste. Dolores sadips ipsums sits.
@@ -31,9 +32,9 @@ Lid est laborum et dolorum fuga. Et harum quidem rerum facilis est et expeditasi
 
 ## Typography
 
-Lid est laborum et dolorum fuga, This is [an example](http://example.com/ "Title") inline link. Et harum quidem rerum facilis, **This is bold** and *emphasis* cumque nihilse impedit quo minus id quod amets untra dolor amet sad. While this is `code block()` and following is a `pre` tag
+Lid est laborum et dolorum fuga, This is [an example](http://example.com/ "Title") inline link. Et harum quidem rerum facilis, **This is bold** and _emphasis_ cumque nihilse impedit quo minus id quod amets untra dolor amet sad. While this is `code block()` and following is a `pre` tag
 
-	print 'this is pre tag'
+    print 'this is pre tag'
 
 Following is the syntax highlighted code block
 
@@ -55,36 +56,35 @@ func setCookie(cookie *http.Cookie, w interface{}) error {
 }
 ```
 
-This is blockquote, Will make it *better now*
+This is blockquote, Will make it _better now_
 
-> 'I want to do with you what spring does with the cherry trees.' <cite>cited ~Pablo Neruda</cite>*
+> 'I want to do with you what spring does with the cherry trees.' <cite>cited ~Pablo Neruda</cite>\*
 
-
-> Et harum quidem *rerum facilis* est et expeditasi distinctio. Nam libero tempore, cum soluta nobis est eligendi optio cumque nihilse impedit
+> Et harum quidem _rerum facilis_ est et expeditasi distinctio. Nam libero tempore, cum soluta nobis est eligendi optio cumque nihilse impedit
 
 Unordered list
 
-*   Red
-*   Green
-*   Blue
+- Red
+- Green
+- Blue
 
 Ordered list
 
-1.	Red
-2.  Green
-3.  Blue
+1. Red
+2. Green
+3. Blue
 
 ## Tables
 
 Tables aren't part of the core Markdown spec, but Hugo supports supports them out-of-the-box.
 
-   Name | Age
---------|------
-    Bob | 27
-  Alice | 23
+| Name  | Age |
+| ----- | --- |
+| Bob   | 27  |
+| Alice | 23  |
 
 #### Inline Markdown within tables
 
-| Inline&nbsp;&nbsp;&nbsp;     | Markdown&nbsp;&nbsp;&nbsp;  | In&nbsp;&nbsp;&nbsp;                | Table      |
-| ---------- | --------- | ----------------- | ---------- |
-| *italics*  | **bold**  | ~~strikethrough~~&nbsp;&nbsp;&nbsp; | `code`     |
+| Inline&nbsp;&nbsp;&nbsp; | Markdown&nbsp;&nbsp;&nbsp; | In&nbsp;&nbsp;&nbsp;                | Table  |
+| ------------------------ | -------------------------- | ----------------------------------- | ------ |
+| _italics_                | **bold**                   | ~~strikethrough~~&nbsp;&nbsp;&nbsp; | `code` |

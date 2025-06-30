@@ -1,6 +1,7 @@
 ---
 title: "Getting Started with Traveling Ultralight"
 date: 2018-03-18T12:13:35+05:30
+draft: true
 ---
 
 I’m on a trip at the moment, and a friend who generously let me sleep on his couch looked at my small travel backpack and commented on how little I travel with: “That’s impressive,” he said.
