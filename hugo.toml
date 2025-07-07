@@ -1,4 +1,4 @@
-baseURL = "http://jnerk.github.io"
+baseURL = "http://jnerk.one"
 languageCode = "en-us"
 title = "Jnerk"
 theme = "ezhil"
@@ -77,9 +77,9 @@ icon = "github"
 url = "https://github.com/jnerk"
 
 # [[params.social]]
-# name = "Twitter"
-# icon = "twitter"
-# url = "https://twitter.com/gohugoio"
+# name = "Bluesky"
+# icon = "message-square"
+# url = "https://bsky.app/profile/jnerk.one"
 
 # Enable tags.
 # [taxonomies]
