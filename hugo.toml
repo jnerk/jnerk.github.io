@@ -1,4 +1,4 @@
-baseURL = "http://jnerk.one"
+baseURL = "https://jnerk.one"
 languageCode = "en-us"
 title = "Jnerk"
 theme = "ezhil"
