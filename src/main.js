@@ -82,7 +82,7 @@ const MAX_DIST = 10.0;
 const EPS = 0.002;
 
 // Cube half-size (keep constant; FOV controls on-screen base size)
-const BOX_SIZE = [0.75, 0.75, 0.75];
+const BOX_SIZE = [0.85, 0.85, 0.85];
 
 // Z-bounce parameters (world units)
 const BOUNCE_AMP = 0.85; // amplitude
