@@ -5,7 +5,8 @@
     color-scheme: dark;
 
     --bg: #0b0d10;
-    --fg: #e5e9f0;
+    --fg: #0b0d10;
+    --fg2: #e5e9f0;
     --muted: #97a1ad;
     --accent: #79ffe1;
 
@@ -23,7 +24,8 @@
     color-scheme: light;
 
     --bg: #f6f7f9;
-    --fg: #111418;
+    --fg: #f6f7f9;
+    --fg2: #111418;
     --muted: #5a606a;
     --accent: #0ea5e9;
 
@@ -112,7 +114,7 @@ main {
 .logo {
     font-weight: 800;
     letter-spacing: 0.2em;
-    font-size: clamp(32px, 10vw, 64px);
+    font-size: clamp(40px, 12vw, 80px);
     color: var(--fg);
     display: inline-block;
     transition: transform 220ms ease, text-shadow 220ms ease, opacity 220ms ease;
@@ -225,9 +227,9 @@ footer {
 
 .theme-toggle {
     appearance: none;
-    border: 1px solid color-mix(in lab, var(--fg) 20%, transparent);
-    background: color-mix(in lab, var(--fg) 6%, transparent);
-    color: var(--fg);
+    border: 1px solid color-mix(in lab, var(--fg2) 20%, transparent);
+    background: color-mix(in lab, var(--fg2) 6%, transparent);
+    color: var(--fg2);
     border-radius: 9999px;
     padding: 8px 12px;
     font: inherit;
@@ -236,7 +238,7 @@ footer {
         transform 80ms ease;
 }
 .theme-toggle:hover {
-    background: color-mix(in lab, var(--fg) 10%, transparent);
+    background: color-mix(in lab, var(--fg2) 10%, transparent);
 }
 .theme-toggle:active {
     transform: translateY(1px);
