@@ -6,7 +6,6 @@ A minimalist personal homepage featuring a real-time animated ASCII cube, theme 
 
 -   **Animated ASCII Cube:** Pixel-perfect, auto-scaling, and depth-faded cube rendered in ASCII art.
 -   **Dark/Light Theme:** Toggle between dark and light modes, with OS preference detection and persistence.
--   **Accessible UI:** Keyboard navigation, focus rings, and tooltips for improved usability.
 -   **Fast & Lightweight:** Built with [Vite](https://vitejs.dev/) for instant reloads and optimized builds.
 
 ## Getting Started
