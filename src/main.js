@@ -1,14 +1,12 @@
 import "./style.css";
 
 /**
- * FILLED + SHADED ASCII CUBE
- * - Pixel-perfect centering (runtime char-cell measurement)
- * - Auto scales with viewport size
- * - Depth fade: starts at 2/3 depth, fully faded at far side
- * - Dark/Light theme with footer switch (persists and respects OS preference)
+ * ASCII CUBE (centered, depth-faded, proper aspect, Z-bounce)
+ * - Pixel-perfect centering via runtime char-cell measurement
+ * - Correct horizontal aspect (no squish) using viewport aspect ratio
+ * - Subtle bounce toward camera along Z
+ * - Depth fade starts at ~2/3 depth per current Z position
  */
-
-const asciiEl = document.getElementById("ascii");
 
 // =================== THEME SWITCHER ===================
 const THEME_KEY = "theme";
@@ -60,51 +58,36 @@ function initThemeToggle() {
 initThemeToggle();
 
 // =================== ASCII ENGINE ===================
+const asciiEl = document.getElementById("ascii");
 
-// Light → dark ramp
-const RAMP = " .-=+#%@";
+// ========== RAMP ==========
+const RAMP = " .-=+*#%@";
 const RAMP_LEN = RAMP.length;
 
-// Grid / render state
+// ========== GRID/RENDER STATE ==========
 let cols = 0,
     rows = 0;
-let dirCache = null; // per-cell view rays
+let dirCache = null; // per-cell view rays (x,y,z)
 let grid = null; // brightness buffer
 let buffer = "";
 let last = performance.now();
+let time = 0; // separate from angle for easy motion control
 let angle = 0;
-let frameCount = 0;
-const TARGET_FPS = 60; // Reduced from 60fps for better performance
-const FRAME_SKIP = Math.max(1, Math.floor(60 / TARGET_FPS));
 
-// Check for reduced motion preference
-let prefersReducedMotion = window.matchMedia(
-    "(prefers-reduced-motion: reduce)"
-).matches;
-
-// Listen for changes to reduced motion preference
-window
-    .matchMedia("(prefers-reduced-motion: reduce)")
-    .addEventListener("change", (e) => {
-        prefersReducedMotion = e.matches;
-    });
-
-// Camera & scene
-const CAM_POS = [0, 0, 3.0]; // camera on +Z looking toward origin
-let FOV = 1.0; // recomputed on resize for auto-scaling
-const MAX_STEPS = 48; // Reduced from 64 for better performance
+// ========== CAMERA / SCENE ==========
+const CAM_POS = [0, 0, 3.0]; // camera on +Z, looking to origin
+let FOV = 1.0; // recomputed on resize to set base size
+const MAX_STEPS = 48;
 const MAX_DIST = 10.0;
 const EPS = 0.002;
 
-// Cube half-size in world units (keep constant; we adjust FOV)
+// Cube half-size (keep constant; FOV controls on-screen base size)
 const BOX_SIZE = [0.75, 0.75, 0.75];
 
-// ---- Depth fade setup ----
-const CAM_DIST = Math.hypot(CAM_POS[0], CAM_POS[1], CAM_POS[2]);
-const BOUND_R = Math.hypot(BOX_SIZE[0], BOX_SIZE[1], BOX_SIZE[2]); // bounding sphere radius
-const DEPTH_NEAR = CAM_DIST - BOUND_R; // distance from camera to front of bounding sphere
-const DEPTH_FAR = CAM_DIST + BOUND_R; // ...to back of bounding sphere
-const FADE_START = 0.05; // fading depth
+// Z-bounce parameters (world units)
+const BOUNCE_AMP = 0.85; // amplitude
+const BOUNCE_HZ = 0.4; // cycles per second (0.33 ≈ one bounce every 3s)
+const ROT_SPEED = 0.9; // base rotation speed multiplier
 
 // ---------- vector helpers ----------
 const clamp01 = (v) => (v < 0 ? 0 : v > 1 ? 1 : v);
@@ -162,19 +145,20 @@ function estimateNormalObj(pObj) {
 }
 
 /**
- * Ray march with the camera fixed in world space.
- * We rotate the sample point into object space for the SDF (true object rotation),
- * then rotate the normal back into world space for lighting.
- * Adds depth-based fade so farther hits blend into the background.
+ * Ray march against a translated + rotated cube.
+ * - ro, rd: camera origin and normalized ray dir in WORLD space
+ * - tRot: {x,y} rotation angles
+ * - trans: world translation of the cube (for Z-bounce)
+ * - fadeNear/fadeFar: dynamic near/far distances for depth fade
  */
-function marchRay(ro, rd, tRot) {
-    const invRot = (v) => rotY(rotX(v, -tRot.x), -tRot.y); // inverse of R
-    const fwdRot = (v) => rotX(rotY(v, tRot.y), tRot.x); // rotate normals back
+function marchRay(ro, rd, tRot, trans, fadeNear, fadeFar) {
+    const invRot = (v) => rotY(rotX(v, -tRot.x), -tRot.y); // inverse of object rotation
+    const fwdRot = (v) => rotX(rotY(v, tRot.y), tRot.x); // rotate normals back to world
 
     let t = 0.0;
     for (let i = 0; i < MAX_STEPS; i++) {
-        const pWorld = add(ro, mul(rd, t));
-        const pObj = invRot(pWorld);
+        const pWorld = add(ro, mul(rd, t)); // point along ray in world
+        const pObj = invRot(sub(pWorld, trans)); // move into object space
 
         const d = sdBox(pObj, BOX_SIZE);
         if (d < EPS) {
@@ -186,20 +170,22 @@ function marchRay(ro, rd, tRot) {
             const ambient = 0.18;
             let br = clamp01(ambient + diff * 0.9);
 
-            // Depth fade
+            // Depth fade (per-frame bounds)
             const camDist = length3(sub(pWorld, CAM_POS));
             const depth01 = clamp01(
-                (camDist - DEPTH_NEAR) / (DEPTH_FAR - DEPTH_NEAR)
+                (camDist - fadeNear) / (fadeFar - fadeNear)
             );
-            const fade = smoothstep(FADE_START, 1.0, depth01); // 0 -> 1 near->far
+            const FADE_START = 1; // begin fading at ~2/3 depth
+            const fade = smoothstep(FADE_START, 1.0, depth01);
             br *= 1.0 - fade;
 
             return br;
         }
+
         t += d;
         if (t > MAX_DIST) break;
     }
-    return 0.0; // miss
+    return 0.0;
 }
 
 // ---------- precise char-cell measurement ----------
@@ -225,33 +211,30 @@ function measureCharCell() {
 
 // ---------- sizing, centering, and ray setup ----------
 function computeFOVForTargetFill() {
-    const camDist = CAM_DIST;
+    // Base size target (no bounce). Vertical FOV scaling.
+    const camDist = Math.hypot(CAM_POS[0], CAM_POS[1], CAM_POS[2]); // = 3
     const s = BOX_SIZE[1];
-    const f = 0.8; // tweak 0.35..0.5 to taste
+    const f = 0.42; // fraction of screen height
     const raw = (2 * s) / camDist / f;
     return Math.max(0.55, Math.min(raw, 1.6));
 }
 
 function resize() {
     const { w: cellW, h: cellH } = measureCharCell();
-
     const vw = window.innerWidth;
     const vh = window.innerHeight;
 
-    const newCols = Math.max(60, Math.floor(vw / cellW));
-    const newRows = Math.max(32, Math.floor(vh / cellH));
+    cols = Math.max(60, Math.floor(vw / cellW));
+    rows = Math.max(32, Math.floor(vh / cellH));
 
-    // Only recreate buffers if size changed
-    if (newCols !== cols || newRows !== rows) {
-        cols = newCols;
-        rows = newRows;
-        dirCache = new Float32Array(cols * rows * 3);
-        grid = new Float32Array(cols * rows);
-    }
+    dirCache = new Float32Array(cols * rows * 3);
+    grid = new Float32Array(cols * rows);
 
-    const aspectFix = cellH / cellW; // correct non-square cells
-    FOV = computeFOVForTargetFill();
+    // Correct horizontal aspect using the real viewport aspect (no more squish)
+    const viewAspect = vw / vh; // width / height
+    FOV = computeFOVForTargetFill(); // vertical FOV scaler
 
+    // Precompute normalized rays through the virtual image plane
     const invCols = 1 / cols,
         invRows = 1 / rows;
     let k = 0;
@@ -259,61 +242,57 @@ function resize() {
         const v = (y + 0.5) * invRows * 2 - 1; // [-1,1], 0 at vertical center
         for (let x = 0; x < cols; x++) {
             const u = (x + 0.5) * invCols * 2 - 1; // [-1,1], 0 at horizontal center
-            const rd = normalize([u * aspectFix * FOV, -v * FOV, -1]);
+            // Horizontal scaled by viewport aspect; vertical by FOV.
+            const rd = normalize([u * viewAspect * FOV, -v * FOV, -1]);
             dirCache[k++] = rd[0];
             dirCache[k++] = rd[1];
             dirCache[k++] = rd[2];
         }
     }
 }
-
 window.addEventListener("resize", resize);
 resize();
 
 // ---------- animation loop ----------
 function step(t) {
-    frameCount++;
-
-    // Frame rate limiting
-    if (frameCount % FRAME_SKIP !== 0) {
-        requestAnimationFrame(step);
-        return;
-    }
-
     const dt = Math.min((t - last) / 1000, 0.033);
     last = t;
+    time += dt;
+    angle += dt * ROT_SPEED;
 
-    // Respect reduced motion preference
-    if (!prefersReducedMotion) {
-        angle += dt * 0.9; // This controls the speed of the animation.
-    }
+    // Rotation and Z-bounce (toward camera at z>0)
+    const tRot = { x: angle * 0.9, y: angle * 1.1 };
+    const zOff = Math.sin(2 * Math.PI * BOUNCE_HZ * time) * BOUNCE_AMP;
+    const trans = [0, 0, zOff];
 
-    const tRot = { x: angle * 0.9, y: angle * 1.1 }; // rotate cube about its center
+    // Dynamic near/far for depth fade (bounding sphere around translated cube)
+    const BOUND_R = Math.hypot(BOX_SIZE[0], BOX_SIZE[1], BOX_SIZE[2]);
+    const centerToCam = Math.abs(CAM_POS[2] - zOff); // camera and cube share X=Y=0
+    const fadeNear = Math.max(0.0, centerToCam - BOUND_R);
+    const fadeFar = centerToCam + BOUND_R;
 
+    // Shade
     let i3 = 0;
     for (let i = 0; i < cols * rows; i++) {
         const rd = [dirCache[i3++], dirCache[i3++], dirCache[i3++]];
-        grid[i] = marchRay(CAM_POS, rd, tRot);
+        grid[i] = marchRay(CAM_POS, rd, tRot, trans, fadeNear, fadeFar);
     }
 
-    // Optimized string building using Array.join()
-    const lines = [];
+    // Map to ASCII
+    let out = "";
     for (let y = 0; y < rows; y++) {
         const start = y * cols;
-        const line = [];
         for (let x = 0; x < cols; x++) {
             const v = grid[start + x];
             const ch =
                 v <= 0
                     ? " "
                     : RAMP[Math.min((v * (RAMP_LEN - 1)) | 0, RAMP_LEN - 1)];
-            line.push(ch);
+            out += ch;
         }
-        lines.push(line.join(""));
+        out += "\n";
     }
-    const out = lines.join("\n");
 
-    // Only update DOM when content actually changes
     if (out !== buffer) {
         buffer = out;
         asciiEl.textContent = buffer;
