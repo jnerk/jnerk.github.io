@@ -167,7 +167,7 @@ function marchRay(ro, rd, tRot, trans, fadeNear, fadeFar) {
             // Base shading (Lambert + ambient)
             const nObj = estimateNormalObj(pObj);
             const nWorld = normalize(fwdRot(nObj));
-            const lightDir = normalize([0.6, 0.7, 0.3]);
+            const lightDir = normalize([0.0, 0.5, 0.5]);
             const diff = Math.max(0, dot(nWorld, lightDir));
             const ambient = 0.18;
             let br = clamp01(ambient + diff * 0.9);
@@ -178,7 +178,7 @@ function marchRay(ro, rd, tRot, trans, fadeNear, fadeFar) {
             const depth01 = clamp01(
                 (camDist - fadeNear) / (fadeFar - fadeNear)
             );
-            const FADE_START = 1; // begin fading at ~2/3 depth
+            const FADE_START = 0.1; // fading depth
             const fade = smoothstep(FADE_START, 1.0, depth01);
             br *= 1.0 - fade;
 
