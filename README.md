@@ -4,17 +4,17 @@ A minimalist personal homepage featuring a real-time animated ASCII cube, theme 
 
 ## Features
 
-- **Animated ASCII Cube:** Pixel-perfect, auto-scaling, and depth-faded cube rendered in ASCII art.
-- **Dark/Light Theme:** Toggle between dark and light modes, with OS preference detection and persistence.
-- **Accessible UI:** Keyboard navigation, focus rings, and tooltips for improved usability.
-- **Fast & Lightweight:** Built with [Vite](https://vitejs.dev/) for instant reloads and optimized builds.
+-   **Animated ASCII Cube:** Pixel-perfect, auto-scaling, and depth-faded cube rendered in ASCII art.
+-   **Dark/Light Theme:** Toggle between dark and light modes, with OS preference detection and persistence.
+-   **Accessible UI:** Keyboard navigation, focus rings, and tooltips for improved usability.
+-   **Fast & Lightweight:** Built with [Vite](https://vitejs.dev/) for instant reloads and optimized builds.
 
 ## Getting Started
 
 ### Prerequisites
 
-- [Node.js](https://nodejs.org/) (v18+ recommended)
-- [npm](https://www.npmjs.com/)
+-   [Node.js](https://nodejs.org/) (v18+ recommended)
+-   [npm](https://www.npmjs.com/)
 
 ### Installation
 
@@ -52,11 +52,11 @@ npm run deploy
 
 ## Project Structure
 
-- [`index.html`](index.html): Main HTML entry point.
-- [`src/main.js`](src/main.js): ASCII cube engine and theme logic.
-- [`src/style.css`](src/style.css): Custom styles and theme tokens.
-- [`vite.config.js`](vite.config.js): Vite configuration.
-- [`package.json`](package.json): Scripts and dependencies.
+-   [`index.html`](index.html): Main HTML entry point.
+-   [`src/main.js`](src/main.js): ASCII cube engine and theme logic.
+-   [`src/style.css`](src/style.css): Custom styles and theme tokens.
+-   [`vite.config.js`](vite.config.js): Vite configuration.
+-   [`package.json`](package.json): Scripts and dependencies.
 
 ## License
 
