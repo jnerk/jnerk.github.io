@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="utf-8" />
+        <meta name="viewport" content="width=device-width,initial-scale=1" />
+        <title>JNERK</title>
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+        <link
+            href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;800&display=swap"
+            rel="stylesheet"
+        />
+        <link rel="icon" href="/favicon.svg" />
+        <!-- Set initial theme early to avoid flashes -->
+        <script>
+            (function () {
+                const stored = localStorage.getItem("theme");
+                const initial = stored
+                    ? stored
+                    : matchMedia("(prefers-color-scheme: dark)").matches
+                    ? "dark"
+                    : "light";
+                document.documentElement.setAttribute("data-theme", initial);
+            })();
+        </script>
+    </head>
+    <body>
+        <div id="ascii" aria-hidden="true"></div>
+
+        <main role="main">
+            <div class="hero">
+                <a
+                    class="logo-link"
+                    href="mailto:contact@jnerk.one"
+                    aria-label="Get in touch via email"
+                >
+                    <span class="logo">JNERK</span>
+                    <span class="logo-hint" aria-hidden="true"
+                        >Get in touch</span
+                    >
+                </a>
+            </div>
+        </main>
+
+        <footer>
+            <button
+                id="theme-toggle"
+                class="theme-toggle"
+                aria-pressed="false"
+                aria-label="Toggle color theme"
+            >
+                ☾ Dark
+            </button>
+            <span class="copyright">© 2025 github.com/jnerk</span>
+        </footer>
+
+        <script type="module" src="/src/main.js"></script>
+    </body>
+</html>
