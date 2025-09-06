@@ -12,7 +12,8 @@
         "deploy": "gh-pages -d dist"
     },
     "devDependencies": {
-        "vite": "^7.1.2"
+        "vite": "^7.1.2",
+        "vite-plugin-simple-html": "^1.0.1"
     },
     "dependencies": {
         "gh-pages": "^6.3.0"
