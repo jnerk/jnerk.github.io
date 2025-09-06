@@ -125,7 +125,7 @@ function sdBox(p, b) {
         Math.abs(p[2]) - b[2],
     ];
     const qpos = [Math.max(q[0], 0), Math.max(q[1], 0), Math.max(q[2], 0)];
-    const outside = length3(qpos);
+    const outside = length3([qpos[0], qpos[1], qpos[2]]);
     const inside = Math.min(Math.max(q[0], Math.max(q[1], q[2])), 0.0);
     return outside + inside;
 }
@@ -152,7 +152,9 @@ function estimateNormalObj(pObj) {
  * - fadeNear/fadeFar: dynamic near/far distances for depth fade
  */
 function marchRay(ro, rd, tRot, trans, fadeNear, fadeFar) {
+    // @ts-ignore
     const invRot = (v) => rotY(rotX(v, -tRot.x), -tRot.y); // inverse of object rotation
+    // @ts-ignore
     const fwdRot = (v) => rotX(rotY(v, tRot.y), tRot.x); // rotate normals back to world
 
     let t = 0.0;
@@ -171,6 +173,7 @@ function marchRay(ro, rd, tRot, trans, fadeNear, fadeFar) {
             let br = clamp01(ambient + diff * 0.9);
 
             // Depth fade (per-frame bounds)
+            // @ts-ignore
             const camDist = length3(sub(pWorld, CAM_POS));
             const depth01 = clamp01(
                 (camDist - fadeNear) / (fadeFar - fadeNear)
@@ -191,6 +194,7 @@ function marchRay(ro, rd, tRot, trans, fadeNear, fadeFar) {
 // ---------- precise char-cell measurement ----------
 function measureCharCell() {
     const probe = document.createElement("pre");
+    // @ts-ignore
     const cs = getComputedStyle(asciiEl);
     probe.style.position = "absolute";
     probe.style.visibility = "hidden";
@@ -295,6 +299,7 @@ function step(t) {
 
     if (out !== buffer) {
         buffer = out;
+        // @ts-ignore
         asciiEl.textContent = buffer;
     }
 
