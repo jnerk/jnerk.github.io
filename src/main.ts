@@ -5,7 +5,8 @@ import "./style.css";
  * - Pixel-perfect centering via runtime char-cell measurement
  * - Correct horizontal aspect (no squish) using viewport aspect ratio
  * - Subtle bounce toward camera along Z
- * - Depth fade starts at ~2/3 depth per current Z position
+ * - Depth fade
+ * - Dark/Light mode based on browser setting
  */
 
 // =================== THEME SWITCHER ===================
