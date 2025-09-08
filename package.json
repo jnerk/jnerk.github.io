@@ -9,9 +9,11 @@
         "build": "vite build",
         "preview": "vite preview",
         "predeploy": "npm run build",
-        "deploy": "gh-pages -d dist"
+        "deploy": "gh-pages -d dist",
+        "type-check": "tsc --noEmit"
     },
     "devDependencies": {
+        "typescript": "^5.9.2",
         "vite": "^7.1.2",
         "vite-plugin-simple-html": "^1.0.1"
     },

@@ -21,10 +21,10 @@ function getCurrentTheme() {
         document.documentElement.getAttribute("data-theme") || getSystemTheme()
     );
 }
-function applyTheme(t) {
+function applyTheme(t: string) {
     document.documentElement.setAttribute("data-theme", t);
 }
-function updateToggleUI(btn, theme) {
+function updateToggleUI(btn: HTMLElement, theme: string) {
     if (!btn) return;
     const to = theme === "dark" ? "light" : "dark";
     btn.textContent = to === "light" ? "☀ Light" : "☾ Dark";
@@ -67,8 +67,8 @@ const RAMP_LEN = RAMP.length;
 // ========== GRID/RENDER STATE ==========
 let cols = 0,
     rows = 0;
-let dirCache = null; // per-cell view rays (x,y,z)
-let grid = null; // brightness buffer
+let dirCache: any[] | Float32Array<ArrayBuffer> | null = null; // per-cell view rays (x,y,z)
+let grid: any[] | Float32Array<ArrayBuffer> | null = null; // brightness buffer
 let buffer = "";
 let last = performance.now();
 let time = 0; // separate from angle for easy motion control
@@ -90,35 +90,36 @@ const BOUNCE_HZ = 0.4; // cycles per second (0.33 ≈ one bounce every 3s)
 const ROT_SPEED = 0.9; // base rotation speed multiplier
 
 // ---------- vector helpers ----------
-const clamp01 = (v) => (v < 0 ? 0 : v > 1 ? 1 : v);
-const smoothstep = (a, b, x) => {
+const clamp01 = (v: number) => (v < 0 ? 0 : v > 1 ? 1 : v);
+const smoothstep = (a: number, b: number, x: number) => {
     const t = clamp01((x - a) / (b - a));
     return t * t * (3 - 2 * t);
 };
-const length3 = ([x, y, z]) => Math.hypot(x, y, z);
-const add = (a, b) => [a[0] + b[0], a[1] + b[1], a[2] + b[2]];
-const sub = (a, b) => [a[0] - b[0], a[1] - b[1], a[2] - b[2]];
-const mul = (a, s) => [a[0] * s, a[1] * s, a[2] * s];
-const dot = (a, b) => a[0] * b[0] + a[1] * b[1] + a[2] * b[2];
-const normalize = (v) => {
+const length3 = ([x, y, z]: [number, number, number]) => Math.hypot(x, y, z);
+const add = (a: any[], b: any[]) => [a[0] + b[0], a[1] + b[1], a[2] + b[2]];
+const sub = (a: any[], b: number[]) => [a[0] - b[0], a[1] - b[1], a[2] - b[2]];
+const mul = (a: number[], s: number) => [a[0] * s, a[1] * s, a[2] * s];
+const dot = (a: number[], b: number[]) =>
+    a[0] * b[0] + a[1] * b[1] + a[2] * b[2];
+const normalize = (v: [number, number, number]) => {
     const L = length3(v) || 1;
     return [v[0] / L, v[1] / L, v[2] / L];
 };
 
 // rotations
-function rotY([x, y, z], a) {
+function rotY([x, y, z]: any[], a: number) {
     const s = Math.sin(a),
         c = Math.cos(a);
     return [c * x + s * z, y, -s * x + c * z];
 }
-function rotX([x, y, z], a) {
+function rotX([x, y, z]: any[], a: number) {
     const s = Math.sin(a),
         c = Math.cos(a);
     return [x, c * y - s * z, s * y + c * z];
 }
 
 // --------- SDF + shading ----------
-function sdBox(p, b) {
+function sdBox(p: any[], b: number[]) {
     const q = [
         Math.abs(p[0]) - b[0],
         Math.abs(p[1]) - b[1],
@@ -130,7 +131,7 @@ function sdBox(p, b) {
     return outside + inside;
 }
 
-function estimateNormalObj(pObj) {
+function estimateNormalObj(pObj: any[]) {
     const e = 0.003;
     const dx =
         sdBox([pObj[0] + e, pObj[1], pObj[2]], BOX_SIZE) -
@@ -151,30 +152,40 @@ function estimateNormalObj(pObj) {
  * - trans: world translation of the cube (for Z-bounce)
  * - fadeNear/fadeFar: dynamic near/far distances for depth fade
  */
-function marchRay(ro, rd, tRot, trans, fadeNear, fadeFar) {
-    // @ts-ignore
-    const invRot = (v) => rotY(rotX(v, -tRot.x), -tRot.y); // inverse of object rotation
-    // @ts-ignore
-    const fwdRot = (v) => rotX(rotY(v, tRot.y), tRot.x); // rotate normals back to world
+function marchRay(
+    ro: number[],
+    rd: any[],
+    tRot: { x: any; y: any },
+    trans: number[],
+    fadeNear: number,
+    fadeFar: number
+) {
+    const invRot = (v: [number, number, number]): [number, number, number] =>
+        rotY(rotX(v, -tRot.x), -tRot.y) as [number, number, number]; // inverse of object rotation
+
+    const fwdRot = (v: [number, number, number]): [number, number, number] =>
+        rotX(rotY(v, tRot.y), tRot.x) as [number, number, number]; // rotate normals back to world
 
     let t = 0.0;
     for (let i = 0; i < MAX_STEPS; i++) {
         const pWorld = add(ro, mul(rd, t)); // point along ray in world
-        const pObj = invRot(sub(pWorld, trans)); // move into object space
+        const pObj = invRot(sub(pWorld, trans) as [number, number, number]); // move into object space
 
         const d = sdBox(pObj, BOX_SIZE);
         if (d < EPS) {
             // Base shading (Lambert + ambient)
             const nObj = estimateNormalObj(pObj);
-            const nWorld = normalize(fwdRot(nObj));
-            const lightDir = normalize([0.0, 0.5, 0.5]);
+            const nWorld = normalize(fwdRot(nObj as [number, number, number]));
+            const lightDir: number[] = normalize([0.0, 0.5, 0.5]);
             const diff = Math.max(0, dot(nWorld, lightDir));
             const ambient = 0.18;
             let br = clamp01(ambient + diff * 0.9);
 
             // Depth fade (per-frame bounds)
-            // @ts-ignore
-            const camDist = length3(sub(pWorld, CAM_POS));
+
+            const camDist = length3(
+                sub(pWorld, CAM_POS) as [number, number, number]
+            );
             const depth01 = clamp01(
                 (camDist - fadeNear) / (fadeFar - fadeNear)
             );
@@ -194,7 +205,11 @@ function marchRay(ro, rd, tRot, trans, fadeNear, fadeFar) {
 // ---------- precise char-cell measurement ----------
 function measureCharCell() {
     const probe = document.createElement("pre");
-    // @ts-ignore
+
+    if (!asciiEl) {
+        // Fallback values if asciiEl is not found
+        return { w: 10, h: 20 };
+    }
     const cs = getComputedStyle(asciiEl);
     probe.style.position = "absolute";
     probe.style.visibility = "hidden";
@@ -258,7 +273,7 @@ window.addEventListener("resize", resize);
 resize();
 
 // ---------- animation loop ----------
-function step(t) {
+function step(t: number) {
     const dt = Math.min((t - last) / 1000, 0.033);
     last = t;
     time += dt;
@@ -276,31 +291,42 @@ function step(t) {
     const fadeFar = centerToCam + BOUND_R;
 
     // Shade
+    if (!dirCache) return; // Ensure dirCache is not null
     let i3 = 0;
     for (let i = 0; i < cols * rows; i++) {
-        const rd = [dirCache[i3++], dirCache[i3++], dirCache[i3++]];
-        grid[i] = marchRay(CAM_POS, rd, tRot, trans, fadeNear, fadeFar);
+        const rd: [number, number, number] = [
+            dirCache[i3++],
+            dirCache[i3++],
+            dirCache[i3++],
+        ];
+        grid![i] = marchRay(CAM_POS, rd, tRot, trans, fadeNear, fadeFar);
     }
 
     // Map to ASCII
     let out = "";
-    for (let y = 0; y < rows; y++) {
-        const start = y * cols;
-        for (let x = 0; x < cols; x++) {
-            const v = grid[start + x];
-            const ch =
-                v <= 0
-                    ? " "
-                    : RAMP[Math.min((v * (RAMP_LEN - 1)) | 0, RAMP_LEN - 1)];
-            out += ch;
+    if (grid) {
+        for (let y = 0; y < rows; y++) {
+            const start = y * cols;
+            for (let x = 0; x < cols; x++) {
+                const v = grid[start + x];
+                const ch =
+                    v <= 0
+                        ? " "
+                        : RAMP[
+                              Math.min((v * (RAMP_LEN - 1)) | 0, RAMP_LEN - 1)
+                          ];
+                out += ch;
+            }
+            out += "\n";
         }
-        out += "\n";
     }
 
     if (out !== buffer) {
         buffer = out;
-        // @ts-ignore
-        asciiEl.textContent = buffer;
+
+        if (asciiEl) {
+            asciiEl.textContent = buffer;
+        }
     }
 
     requestAnimationFrame(step);
