@@ -1,4 +1,4 @@
-import { Vector3, Rotation, vectorOps } from './types/vector';
+import { Vector3, Rotation, vectorOps } from "./types/vector";
 import {
     BOX_SIZE,
     CAM_POS,
@@ -10,8 +10,8 @@ import {
     DIFFUSE_STRENGTH,
     FADE_START,
     RAMP,
-    RAMP_LEN
-} from './config';
+    RAMP_LEN,
+} from "./config";
 
 export class Renderer {
     private cols: number = 0;
@@ -25,7 +25,9 @@ export class Renderer {
     constructor(asciiElementId: string) {
         this.asciiEl = document.getElementById(asciiElementId);
         if (!this.asciiEl) {
-            throw new Error(`ASCII element with id '${asciiElementId}' not found`);
+            throw new Error(
+                `ASCII element with id '${asciiElementId}' not found`
+            );
         }
         this.resize = this.resize.bind(this);
         window.addEventListener("resize", this.resize);
@@ -41,7 +43,7 @@ export class Renderer {
         const qpos: Vector3 = [
             Math.max(q[0], 0),
             Math.max(q[1], 0),
-            Math.max(q[2], 0)
+            Math.max(q[2], 0),
         ];
         const outside = vectorOps.length(qpos);
         const inside = Math.min(Math.max(q[0], Math.max(q[1], q[2])), 0.0);
@@ -50,12 +52,15 @@ export class Renderer {
 
     private estimateNormalObj(pObj: Vector3): Vector3 {
         const e = 0.003;
-        const dx = this.sdBox([pObj[0] + e, pObj[1], pObj[2]], BOX_SIZE) -
-                  this.sdBox([pObj[0] - e, pObj[1], pObj[2]], BOX_SIZE);
-        const dy = this.sdBox([pObj[0], pObj[1] + e, pObj[2]], BOX_SIZE) -
-                  this.sdBox([pObj[0], pObj[1] - e, pObj[2]], BOX_SIZE);
-        const dz = this.sdBox([pObj[0], pObj[1], pObj[2] + e], BOX_SIZE) -
-                  this.sdBox([pObj[0], pObj[1], pObj[2] - e], BOX_SIZE);
+        const dx =
+            this.sdBox([pObj[0] + e, pObj[1], pObj[2]], BOX_SIZE) -
+            this.sdBox([pObj[0] - e, pObj[1], pObj[2]], BOX_SIZE);
+        const dy =
+            this.sdBox([pObj[0], pObj[1] + e, pObj[2]], BOX_SIZE) -
+            this.sdBox([pObj[0], pObj[1] - e, pObj[2]], BOX_SIZE);
+        const dz =
+            this.sdBox([pObj[0], pObj[1], pObj[2] + e], BOX_SIZE) -
+            this.sdBox([pObj[0], pObj[1], pObj[2] - e], BOX_SIZE);
         return vectorOps.normalize([dx, dy, dz]);
     }
 
@@ -83,10 +88,18 @@ export class Renderer {
                 const nObj = this.estimateNormalObj(pObj);
                 const nWorld = vectorOps.normalize(fwdRot(nObj));
                 const diff = Math.max(0, vectorOps.dot(nWorld, LIGHT_DIR));
-                let br = Math.min(Math.max(AMBIENT_LIGHT + diff * DIFFUSE_STRENGTH, 0), 1);
+                let br = Math.min(
+                    Math.max(AMBIENT_LIGHT + diff * DIFFUSE_STRENGTH, 0),
+                    1
+                );
 
-                const camDist = vectorOps.length(vectorOps.sub(pWorld, CAM_POS));
-                const depth01 = Math.min(Math.max((camDist - fadeNear) / (fadeFar - fadeNear), 0), 1);
+                const camDist = vectorOps.length(
+                    vectorOps.sub(pWorld, CAM_POS)
+                );
+                const depth01 = Math.min(
+                    Math.max((camDist - fadeNear) / (fadeFar - fadeNear), 0),
+                    1
+                );
                 const fade = this.smoothstep(FADE_START, 1.0, depth01);
                 br *= 1.0 - fade;
 
@@ -150,10 +163,14 @@ export class Renderer {
 
         let k = 0;
         for (let y = 0; y < this.rows; y++) {
-            const v = (y + 0.5) / this.rows * 2 - 1;
+            const v = ((y + 0.5) / this.rows) * 2 - 1;
             for (let x = 0; x < this.cols; x++) {
-                const u = (x + 0.5) / this.cols * 2 - 1;
-                const rd = vectorOps.normalize([u * viewAspect * this.FOV, -v * this.FOV, -1]);
+                const u = ((x + 0.5) / this.cols) * 2 - 1;
+                const rd = vectorOps.normalize([
+                    u * viewAspect * this.FOV,
+                    -v * this.FOV,
+                    -1,
+                ]);
                 this.dirCache[k++] = rd[0];
                 this.dirCache[k++] = rd[1];
                 this.dirCache[k++] = rd[2];
@@ -178,7 +195,14 @@ export class Renderer {
                 this.dirCache[i3++],
                 this.dirCache[i3++],
             ];
-            this.grid[i] = this.marchRay(CAM_POS, rd, rotation, trans, fadeNear, fadeFar);
+            this.grid[i] = this.marchRay(
+                CAM_POS,
+                rd,
+                rotation,
+                trans,
+                fadeNear,
+                fadeFar
+            );
         }
 
         let out = "";
@@ -186,9 +210,12 @@ export class Renderer {
             const start = y * this.cols;
             for (let x = 0; x < this.cols; x++) {
                 const v = this.grid[start + x];
-                const ch = v <= 0
-                    ? " "
-                    : RAMP[Math.min((v * (RAMP_LEN - 1)) | 0, RAMP_LEN - 1)];
+                const ch =
+                    v <= 0
+                        ? " "
+                        : RAMP[
+                              Math.min((v * (RAMP_LEN - 1)) | 0, RAMP_LEN - 1)
+                          ];
                 out += ch;
             }
             out += "\n";

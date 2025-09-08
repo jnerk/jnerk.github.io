@@ -1,13 +1,15 @@
-import { THEME_KEY } from './config';
+import { THEME_KEY } from "./config";
 
-export function getSystemTheme(): 'dark' | 'light' {
+export function getSystemTheme(): "dark" | "light" {
     return matchMedia("(prefers-color-scheme: dark)").matches
         ? "dark"
         : "light";
 }
 
 export function getCurrentTheme(): string {
-    return document.documentElement.getAttribute("data-theme") || getSystemTheme();
+    return (
+        document.documentElement.getAttribute("data-theme") || getSystemTheme()
+    );
 }
 
 export function applyTheme(theme: string): void {
