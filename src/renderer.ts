@@ -1,4 +1,4 @@
-import { Vector3, Rotation, vectorOps } from "./types/vector";
+import { Vector3, Rotation, vectorOps } from "./vector";
 import {
     BOX_SIZE,
     CAM_POS,

@@ -1,4 +1,4 @@
-import { Vector3 } from "./types/vector";
+import { Vector3 } from "./vector";
 
 export const THEME_KEY = "theme";
 
