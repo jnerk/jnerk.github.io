@@ -236,6 +236,12 @@ footer {
     cursor: pointer;
     transition: background 180ms ease, border-color 180ms ease,
         transform 80ms ease;
+
+    /* Position in top right corner */
+    position: fixed;
+    top: 20px;
+    right: 20px;
+    z-index: 10;
 }
 .theme-toggle:hover {
     background: color-mix(in lab, var(--fg2) 10%, transparent);

@@ -24,6 +24,15 @@
         </script>
     </head>
     <body>
+        <button
+            id="theme-toggle"
+            class="theme-toggle"
+            aria-pressed="false"
+            aria-label="Toggle color theme"
+        >
+            ☾ Dark
+        </button>
+
         <div id="ascii" aria-hidden="true"></div>
 
         <main role="main">
@@ -39,17 +48,9 @@
             </div>
         </main>
 
-        <footer>
-            <button
-                id="theme-toggle"
-                class="theme-toggle"
-                aria-pressed="false"
-                aria-label="Toggle color theme"
-            >
-                ☾ Dark
-            </button>
+        <!-- <footer>
             <span class="copyright">© 2025 github.com/jnerk</span>
-        </footer>
+        </footer> -->
 
         <script type="module" src="/src/main.ts"></script>
     </body>
