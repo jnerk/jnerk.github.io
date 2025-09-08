@@ -7,11 +7,6 @@ export default defineConfig({
     plugins: [
         simpleHtmlPlugin({
             minify: true, // Enable minification
-            // You can also pass specific options to @swc/html here for customization
-            // minify: {
-            //   minifyJs: true,
-            //   removeComments: true,
-            // },
         }),
     ],
 });
