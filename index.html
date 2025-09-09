@@ -24,14 +24,17 @@
         </script>
     </head>
     <body>
-        <button
-            id="theme-toggle"
-            class="theme-toggle"
-            aria-pressed="false"
-            aria-label="Toggle color theme"
-        >
-            ☾
-        </button>
+        <div class="header-row">
+            <span class="copyright">© 2025 github.com/jnerk</span>
+            <button
+                id="theme-toggle"
+                class="theme-toggle"
+                aria-pressed="false"
+                aria-label="Toggle color theme"
+            >
+                ☾
+            </button>
+        </div>
 
         <div id="ascii" aria-hidden="true"></div>
 
@@ -47,10 +50,6 @@
                 <!-- </a> -->
             </div>
         </main>
-
-        <!-- <footer>
-            <span class="copyright">© 2025 github.com/jnerk</span>
-        </footer> -->
 
         <script type="module" src="/src/main.ts"></script>
     </body>

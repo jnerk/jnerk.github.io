@@ -47,6 +47,21 @@ body {
     height: 100%;
 }
 
+.header-row {
+    position: fixed;
+    top: 1.25rem;
+    right: 1.25rem;
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    z-index: 2;
+}
+
+.copyright {
+    color: var(--muted);
+    font-size: 0.875rem;
+}
+
 body {
     margin: 0;
     background: var(--bg);
@@ -237,11 +252,8 @@ footer {
     transition: background 180ms ease, border-color 180ms ease,
         transform 80ms ease;
 
-    /* Position in top right corner */
-    position: fixed;
-    top: 20px;
-    right: 20px;
-    z-index: 10;
+    /* Theme toggle is now part of the header row */
+    position: relative;
 }
 .theme-toggle:hover {
     background: color-mix(in lab, var(--fg2) 10%, transparent);
