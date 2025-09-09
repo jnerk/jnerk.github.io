@@ -60,6 +60,12 @@ body {
 .copyright {
     color: var(--muted);
     font-size: 0.875rem;
+    text-decoration: none;
+    transition: color 0.2s ease;
+}
+
+.copyright:hover {
+    color: var(--accent);
 }
 
 body {
