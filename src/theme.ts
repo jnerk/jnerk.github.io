@@ -19,7 +19,7 @@ export function applyTheme(theme: string): void {
 export function updateToggleUI(btn: HTMLElement, theme: string): void {
     if (!btn) return;
     const to = theme === "dark" ? "light" : "dark";
-    btn.textContent = to === "light" ? "☀ Light" : "☾ Dark";
+    btn.textContent = to === "light" ? "☀" : "☾";
     btn.setAttribute("aria-label", `Switch to ${to} mode`);
     btn.setAttribute("aria-pressed", theme === "dark" ? "true" : "false");
 }
