@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
     <!--
         .___.___\___._______._______.___ ___.
@@ -24,8 +24,8 @@
                 const initial = stored
                     ? stored
                     : matchMedia("(prefers-color-scheme: dark)").matches
-                    ? "dark"
-                    : "light";
+                      ? "dark"
+                      : "light";
                 document.documentElement.setAttribute("data-theme", initial);
             })();
         </script>
